@@ -1,10 +1,7 @@
 package com.example.prodteamfinal.presentation.screen
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.util.Log
-import android.view.Window
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,10 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.prodfinal.presentation.view.SkeletonView
-import com.example.prodteamfinal.presentation.view.ExecutorView
 import com.example.prodteamfinal.R
 import com.example.prodteamfinal.data.api.FormInfoApi
 import com.example.prodteamfinal.data.repository.FormInfoRepositoryImpl
@@ -54,7 +48,10 @@ import com.example.prodteamfinal.domain.model.FormModel
 import com.example.prodteamfinal.domain.state.FormState
 import com.example.prodteamfinal.domain.state.FormType
 import com.example.prodteamfinal.domain.state.LoadingState
+import com.example.prodteamfinal.navigation.currentForm
+import com.example.prodteamfinal.navigation.currentScreen
 import com.example.prodteamfinal.presentation.theme.blackButtonColors
+import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -142,7 +139,9 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                         ) {
-                            navController.popBackStack()
+                            if (currentScreen == "form_info_screen") {
+                                navController.popBackStack()
+                            }
                         }
                     )
                     if (loadingStatus.value == LoadingState.READY) {
@@ -185,7 +184,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                 AsyncImage(
                                     model = formInfo.value.executor.photo,
                                     contentDescription = "Аватар",
-                                    contentScale = ContentScale.FillBounds,
+                                    contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .height(90.dp)
                                         .width(90.dp)
@@ -195,7 +194,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                 Text(
                                     text = formInfo.value.executor.name,
                                     fontSize = 19.sp,
-                                    fontWeight = FontWeight(500),
+                                    fontWeight = FontWeight(700),
                                     fontFamily = FontFamily(Font(R.font.roboto)),
                                     textAlign = TextAlign.Center
                                 )
@@ -234,7 +233,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                 Text(
                                     text = "Информация",
                                     fontSize = 22.sp,
-                                    fontWeight = FontWeight(600),
+                                    fontWeight = FontWeight(700),
                                     fontFamily = FontFamily(Font(R.font.roboto)),
                                 )
 
@@ -248,7 +247,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                     Text(
                                         text = formInfo.value.location,
                                         fontSize = 19.sp,
-                                        fontWeight = FontWeight(500),
+                                        fontWeight = FontWeight(400),
                                         fontFamily = FontFamily(Font(R.font.roboto)),
                                         modifier = Modifier.padding(start = 3.dp)
                                     )
@@ -270,7 +269,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                             time.value.minute
                                         ),
                                         fontSize = 19.sp,
-                                        fontWeight = FontWeight(500),
+                                        fontWeight = FontWeight(400),
                                         fontFamily = FontFamily(Font(R.font.roboto)),
                                         modifier = Modifier.padding(start = 3.dp)
                                     )
@@ -290,7 +289,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                 Text(
                                     text = "Участники встречи",
                                     fontSize = 22.sp,
-                                    fontWeight = FontWeight(600),
+                                    fontWeight = FontWeight(700),
                                     fontFamily = FontFamily(Font(R.font.roboto)),
                                 )
 
@@ -298,8 +297,8 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                     Text(
                                         text = "${index + 1}. ${item.name}",
                                         fontSize = 19.sp,
-                                        fontWeight = FontWeight(500),
-                                        fontFamily = FontFamily(Font(R.font.roboto))
+                                        fontWeight = FontWeight(400),
+                                        fontFamily = FontFamily(Font(R.font.roboto)),
                                     )
                                 }
                             }
@@ -317,7 +316,7 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                 Text(
                                     text = "Необходимые документы",
                                     fontSize = 22.sp,
-                                    fontWeight = FontWeight(600),
+                                    fontWeight = FontWeight(700),
                                     fontFamily = FontFamily(Font(R.font.roboto)),
                                 )
 
@@ -325,13 +324,13 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                     Text(
                                         text = "${index + 1}. $item",
                                         fontSize = 19.sp,
-                                        fontWeight = FontWeight(500),
+                                        fontWeight = FontWeight(400),
                                         fontFamily = FontFamily(Font(R.font.roboto))
                                     )
                                 }
                             }
 
-                            Row (
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 10.dp),
@@ -339,7 +338,10 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                             ) {
                                 Button(
                                     colors = blackButtonColors(),
-                                    onClick = {},
+                                    onClick = {
+                                        currentForm.value = formInfo.value
+                                        navController.navigate("edit_form_screen")
+                                    },
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Text(
@@ -361,13 +363,18 @@ fun FormInfoScreen(context: Context, navController: NavController) {
                                             indication = null,
                                         ) {
                                             val builder = AlertDialog.Builder(context)
-                                            builder.setMessage("Может вам удобно перенести встречу?")
-                                                .setPositiveButton("Да") { dialog, _ ->
-                                                    navController.navigate("form_info_screen")
+                                            builder
+                                                .setMessage("Может вам удобно перенести встречу?")
+                                                .setPositiveButton("Да") { _, _ ->
+                                                    currentForm.value = formInfo.value
+                                                    navController.navigate("edit_form_screen")
                                                 }
                                                 .setNegativeButton("Нет") { dialog, _ ->
                                                     dialog.dismiss()
-                                                    FormInfoApi().deleteForm(context, formInfo.value.id)
+                                                    FormInfoApi().deleteForm(
+                                                        context,
+                                                        formInfo.value.id
+                                                    )
                                                     navController.navigate("main_screen")
                                                 }
                                             builder.create()

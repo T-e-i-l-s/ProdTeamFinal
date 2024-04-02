@@ -54,7 +54,7 @@ fun ExecutorView(modifier: Modifier, executor: ExecutorModel) {
                 AsyncImage(
                     model = executor.photo,
                     contentDescription = "Аватар",
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(50.dp)
                         .width(50.dp)

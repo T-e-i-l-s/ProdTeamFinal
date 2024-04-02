@@ -5,8 +5,9 @@
     <color name="text">#2E2E2E</color>
     <color name="gray">#C6C6C6</color>
     <color name="additional1">#00402f</color>
-    <color name="additional2">#fedd2c</color>
+    <color name="ads">#fff6d4</color>
     <color name="error">#992A22</color>
+    <color name="link">#4C4C4C</color>
     <color name="sceleton1">#D5D5D5</color>
     <color name="sceleton2">#BCBCBC</color>
 </resources>

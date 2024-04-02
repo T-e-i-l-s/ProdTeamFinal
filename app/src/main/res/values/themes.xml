@@ -3,5 +3,6 @@
     <style name="Theme.ProdTeamFinal" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:colorPrimaryDark">@color/background</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:background">@color/background</item>
     </style>
 </resources>

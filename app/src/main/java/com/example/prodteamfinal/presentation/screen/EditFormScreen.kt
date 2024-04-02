@@ -1,6 +1,5 @@
 package com.example.prodteamfinal.presentation.screen
 
-import android.app.AlertDialog
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,7 +8,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,20 +34,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.prodteamfinal.R
-import com.example.prodteamfinal.data.api.AgentsApi
 import com.example.prodteamfinal.data.api.FormInfoApi
-import com.example.prodteamfinal.data.api.FormsApi
 import com.example.prodteamfinal.data.repository.NominatimRepositoryImpl
 import com.example.prodteamfinal.domain.model.FullExecutorModel
 import com.example.prodteamfinal.domain.model.LocationModel
 import com.example.prodteamfinal.domain.model.ParticipantModel
 import com.example.prodteamfinal.domain.state.LoadingState
+import com.example.prodteamfinal.navigation.currentForm
 import com.example.prodteamfinal.navigation.currentScreen
 import com.example.prodteamfinal.phoneNumber
 import com.example.prodteamfinal.presentation.theme.greenButtonColors
-import com.example.prodteamfinal.presentation.theme.hiddenGreenButtonColors
 import com.example.prodteamfinal.presentation.view.DateSelectorView
-import com.example.prodteamfinal.presentation.view.ExecutorSelectorView
 import com.example.prodteamfinal.presentation.view.LocationSelectorView
 import com.example.prodteamfinal.presentation.view.ParticipantsSelectorView
 import com.example.prodteamfinal.presentation.view.TimeSelectorView
@@ -58,7 +54,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateFormScreen(context: Context, navController: NavController) {
+fun EditFormScreen(context: Context, navController: NavController) {
     val participants = remember {
         mutableStateOf(
             arrayListOf(
@@ -69,10 +65,19 @@ fun CreateFormScreen(context: Context, navController: NavController) {
             )
         )
     }
-    val date = remember {
-        mutableStateOf("01.04.2024")
+    val id = remember {
+        mutableStateOf("")
     }
     val time = rememberTimePickerState(0, 0, true)
+    val date = remember {
+        mutableStateOf("03.04.2024")
+    }
+    val hour = remember {
+        mutableIntStateOf(0)
+    }
+    val minute = remember {
+        mutableIntStateOf(0)
+    }
     val location = remember {
         mutableStateOf("")
     }
@@ -82,20 +87,22 @@ fun CreateFormScreen(context: Context, navController: NavController) {
     val locationIsValid = remember {
         mutableStateOf(true)
     }
-    val executorsLoadingStatus = remember {
-        mutableStateOf(LoadingState.LOADING)
-    }
-    val executors = remember {
-        mutableStateOf(ArrayList<FullExecutorModel>())
-    }
-    val executorId = remember {
-        mutableIntStateOf(0)
-    }
     val screen = remember {
         mutableIntStateOf(0)
     }
     val isChecking = remember {
         mutableStateOf(false)
+    }
+
+    LaunchedEffect(true) {
+        val formInfo = currentForm.value
+        participants.value = formInfo.participants
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        val local = LocalDateTime.parse(formInfo.time, formatter)
+        val localDate = local.toLocalDate()
+        id.value = formInfo.id
+        date.value = "${localDate.dayOfMonth}.${localDate.monthValue}.${localDate.year}"
+        location.value = formInfo.location
     }
 
     Column(
@@ -119,11 +126,11 @@ fun CreateFormScreen(context: Context, navController: NavController) {
                         indication = null,
                     ) {
                         if (screen.intValue == 0) {
-                            if (currentScreen == "create_form_screen") {
+                            if (currentScreen == "edit_form_screen") {
                                 navController.popBackStack()
                             }
                         } else if (screen.intValue == 5) {
-                            screen.intValue-=2
+                            screen.intValue -= 2
                         } else {
                             screen.intValue--
                         }
@@ -166,7 +173,7 @@ fun CreateFormScreen(context: Context, navController: NavController) {
                     )
                 }
 
-                4 -> {
+                else -> {
                     isChecking.value = true
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -187,13 +194,6 @@ fun CreateFormScreen(context: Context, navController: NavController) {
                             fontFamily = FontFamily(Font(R.font.roboto)),
                         )
                     }
-                }
-
-                else -> {
-                    ExecutorSelectorView(
-                        executors = executors,
-                        executorId = executorId
-                    )
                 }
             }
 
@@ -225,63 +225,19 @@ fun CreateFormScreen(context: Context, navController: NavController) {
                                     0,
                                 )
                                 val formatter = DateTimeFormatter.ISO_DATE_TIME
-                                AgentsApi().getAgents(
+                                FormInfoApi().patchFormInfo(
                                     context,
-                                    it.lat,
-                                    it.lon,
+                                    id.value,
                                     dateTime.format(formatter),
-                                    { list ->
-                                        if (list.isEmpty()) {
-                                            val builder = AlertDialog.Builder(context)
-                                            builder
-                                                .setTitle("Все представители заняты")
-                                                .setMessage("Выберите другое время")
-                                                .setPositiveButton("Перенести встречу") { _, _ ->
-                                                    screen.intValue = 1
-                                                    isChecking.value = false
-                                                }
-                                                .setNegativeButton("На главную") { _, _ ->
-                                                    navController.navigate("main_screen")
-                                                    isChecking.value = false
-                                                }
-                                            builder.create()
-                                            builder.show()
-                                        } else {
-                                            screen.intValue++
-                                            isChecking.value = false
-                                            executors.value = list
-                                            executorsLoadingStatus.value = LoadingState.READY
-                                        }
-                                    },
-                                    {
-                                        navController.navigate("create_form_result_screen/false")
-                                    }
+                                    fullLocation.value.name,
+                                    fullLocation.value.lat,
+                                    fullLocation.value.lon,
+                                    participants
                                 )
+
+                                navController.navigate("create_form_result_screen/true")
                             }
                         }
-                    } else if (screen.intValue > 4) {
-                        val splitedDate = date.value.split('.')
-                        val dateTime = LocalDateTime.of(
-                            splitedDate[2].toInt(),
-                            splitedDate[1].toInt() + 1,
-                            splitedDate[0].toInt(),
-                            time.hour,
-                            time.minute,
-                            0,
-                        )
-                        val formatter = DateTimeFormatter.ISO_DATE_TIME
-
-                        FormsApi().addForm(
-                            context,
-                            dateTime.format(formatter),
-                            executors.value[executorId.intValue].id,
-                            fullLocation.value.name,
-                            fullLocation.value.lat,
-                            fullLocation.value.lon,
-                            participants
-                        )
-
-                        navController.navigate("create_form_result_screen/true")
                     }
                 },
                 colors = greenButtonColors(),

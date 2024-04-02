@@ -1,5 +1,6 @@
 package com.example.prodteamfinal.presentation.view
 
+import android.util.Log
 import android.widget.CalendarView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.prodteamfinal.R
+import java.util.Calendar
+import java.util.Date
 
 @Composable
 fun DateSelectorView(modifier: Modifier, value: MutableState<String>) {
@@ -35,12 +38,28 @@ fun DateSelectorView(modifier: Modifier, value: MutableState<String>) {
             modifier = Modifier.padding(bottom = 10.dp)
         )
         AndroidView(
-            { CalendarView(it) },
+            {
+                CalendarView(it).apply {
+                    val date = value.value.split('.')
+                    val calendar = Calendar.getInstance()
+                    calendar.set(Calendar.YEAR, date[2].toInt())
+                    calendar.set(Calendar.MONTH, 3)
+                    calendar.set(Calendar.DAY_OF_MONTH, date[0].toInt())
+                    setDate(calendar.timeInMillis)
+                    val min = Calendar.getInstance()
+                    val max = Calendar.getInstance()
+                    max.set(Calendar.YEAR, 2024)
+                    max.set(Calendar.MONTH, 3)
+                    max.set(Calendar.DAY_OF_MONTH, 17)
+                    minDate = min.timeInMillis
+                    maxDate = max.timeInMillis
+                }
+            },
             modifier = Modifier.wrapContentWidth(),
             update = { views ->
                 views.setOnDateChangeListener { _, year, month, dayOfMonth ->
-                    value.value = "${String.format("%02d",dayOfMonth)}." +
-                            "${String.format("%02d",month)}." +
+                    value.value = "${String.format("%02d", dayOfMonth)}." +
+                            "${String.format("%02d", month)}." +
                             "$year"
                 }
             },

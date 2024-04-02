@@ -98,7 +98,6 @@ fun ExecutorSelectorView(
                         modifier = Modifier
                             .fillMaxHeight()
                             .width(90.dp)
-                            .height(90.dp)
                             .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
                     )
                     Column (
