@@ -1,20 +1,15 @@
 package com.example.prodteamfinal.presentation.screen
 
-import android.app.AlertDialog
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -33,16 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.prodteamfinal.R
-import com.example.prodteamfinal.data.api.AgentsApi
-import com.example.prodteamfinal.data.api.FormsApi
 import com.example.prodteamfinal.data.api.ProductsApi
-import com.example.prodteamfinal.data.repository.NominatimRepositoryImpl
 import com.example.prodteamfinal.domain.model.ProductModel
-import com.example.prodteamfinal.domain.state.LoadingState
 import com.example.prodteamfinal.presentation.theme.greenButtonColors
 import com.example.prodteamfinal.presentation.view.ProductView
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun CreateFormResultScreen(context: Context, navController: NavController) {
@@ -136,7 +124,7 @@ fun Success(context: Context) {
                 fontFamily = FontFamily(Font(R.font.roboto)),
                 modifier = Modifier.padding(top = 10.dp)
             )
-            ProductView(value = products.value[0])
+            ProductView(context, value = products.value[0])
         }
     }
 }

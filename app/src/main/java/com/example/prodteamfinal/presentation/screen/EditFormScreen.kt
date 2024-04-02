@@ -36,10 +36,8 @@ import androidx.navigation.NavController
 import com.example.prodteamfinal.R
 import com.example.prodteamfinal.data.api.FormInfoApi
 import com.example.prodteamfinal.data.repository.NominatimRepositoryImpl
-import com.example.prodteamfinal.domain.model.FullExecutorModel
 import com.example.prodteamfinal.domain.model.LocationModel
 import com.example.prodteamfinal.domain.model.ParticipantModel
-import com.example.prodteamfinal.domain.state.LoadingState
 import com.example.prodteamfinal.navigation.currentForm
 import com.example.prodteamfinal.navigation.currentScreen
 import com.example.prodteamfinal.phoneNumber
@@ -71,12 +69,6 @@ fun EditFormScreen(context: Context, navController: NavController) {
     val time = rememberTimePickerState(0, 0, true)
     val date = remember {
         mutableStateOf("03.04.2024")
-    }
-    val hour = remember {
-        mutableIntStateOf(0)
-    }
-    val minute = remember {
-        mutableIntStateOf(0)
     }
     val location = remember {
         mutableStateOf("")

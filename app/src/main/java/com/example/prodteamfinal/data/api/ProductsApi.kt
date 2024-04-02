@@ -1,28 +1,43 @@
 package com.example.prodteamfinal.data.api
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.MutableState
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.prodteamfinal.apiUrl
-import com.example.prodteamfinal.domain.model.ExecutorModel
-import com.example.prodteamfinal.domain.model.FormModel
-import com.example.prodteamfinal.domain.model.FullExecutorModel
-import com.example.prodteamfinal.domain.model.ParticipantModel
 import com.example.prodteamfinal.domain.model.ProductModel
-import com.example.prodteamfinal.domain.state.FormState
-import com.example.prodteamfinal.domain.state.FormType
 import com.example.prodteamfinal.token
-import com.google.gson.Gson
 import org.json.JSONArray
-import org.json.JSONObject
 
 class ProductsApi {
+    fun post(
+        context: Context,
+        id: String
+    ) {
+        val url = "$apiUrl/products/$id"
+
+        val requestQueue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(
+            Method.POST,
+            url,
+            {},
+            {}
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = token
+                headers["content-type"] = "application/json"
+                headers["accept"] = "application/json"
+                return headers
+            }
+        }
+
+        requestQueue.add(stringRequest)
+    }
+
     fun getProducts(
         context: Context,
         onFinish: (result: ArrayList<ProductModel>) -> Unit,

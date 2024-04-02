@@ -1,9 +1,7 @@
 package com.example.prodteamfinal.presentation.view
 
-import android.util.Log
 import android.widget.CalendarView
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Text
@@ -15,13 +13,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.prodteamfinal.R
 import java.util.Calendar
-import java.util.Date
 
 @Composable
 fun DateSelectorView(modifier: Modifier, value: MutableState<String>) {

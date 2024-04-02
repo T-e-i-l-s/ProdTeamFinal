@@ -7,7 +7,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.prodfinal.navigation.ChangeStatusBarColor
 import com.example.prodteamfinal.R
 import com.example.prodteamfinal.domain.model.ExecutorModel
 import com.example.prodteamfinal.domain.model.FormModel
@@ -16,7 +15,6 @@ import com.example.prodteamfinal.domain.state.FormType
 import com.example.prodteamfinal.presentation.screen.CreateFormResultScreen
 import com.example.prodteamfinal.presentation.screen.CreateFormScreen
 import com.example.prodteamfinal.presentation.screen.EditFormScreen
-import com.example.prodteamfinal.presentation.screen.ExecutorSelectorScreen
 import com.example.prodteamfinal.presentation.screen.FormInfoScreen
 import com.example.prodteamfinal.presentation.screen.MainScreen
 
@@ -79,14 +77,6 @@ fun StackNavigator () {
             currentScreen = "edit_form_screen"
             ChangeStatusBarColor(color = colorResource(id = R.color.background))
             EditFormScreen(LocalContext.current, navController)
-        }
-        // Экран создания заявки
-        composable(
-            "executor_selector_screen/{lat}/{lon}/{time}"
-        ) {
-            currentScreen = "executor_selector_screen"
-            ChangeStatusBarColor(color = colorResource(id = R.color.background))
-            ExecutorSelectorScreen(LocalContext.current, navController)
         }
         // Экран с результатом заявки
         composable(

@@ -1,12 +1,10 @@
 package com.example.prodteamfinal.data.api
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.prodteamfinal.apiUrl
@@ -16,7 +14,6 @@ import com.example.prodteamfinal.domain.model.ParticipantModel
 import com.example.prodteamfinal.domain.state.FormState
 import com.example.prodteamfinal.domain.state.FormType
 import com.example.prodteamfinal.token
-import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -163,7 +160,6 @@ class FormsApi {
             )
         }
 
-        Log.d("RESULT___", list.toString())
         onFinish(list)
     }
 }

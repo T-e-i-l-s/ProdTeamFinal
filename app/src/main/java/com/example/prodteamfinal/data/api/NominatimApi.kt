@@ -1,7 +1,6 @@
 package com.example.prodteamfinal.data.api
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -44,9 +43,7 @@ class NominatimApi {
                 }
             },
 
-            { response ->
-                Log.e("RESPONSE____", response.toString())
-            }
+            {}
         )
 
         requestQueue.add(stringRequest)

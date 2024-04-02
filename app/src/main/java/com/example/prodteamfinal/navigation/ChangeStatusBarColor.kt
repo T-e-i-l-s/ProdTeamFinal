@@ -1,4 +1,4 @@
-package com.example.prodfinal.navigation
+package com.example.prodteamfinal.navigation
 
 import android.app.Activity
 import androidx.compose.runtime.Composable

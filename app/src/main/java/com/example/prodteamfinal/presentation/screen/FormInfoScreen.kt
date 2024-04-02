@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.prodfinal.presentation.view.SkeletonView
+import com.example.prodteamfinal.presentation.view.SkeletonView
 import com.example.prodteamfinal.R
 import com.example.prodteamfinal.data.api.FormInfoApi
 import com.example.prodteamfinal.data.repository.FormInfoRepositoryImpl
@@ -51,7 +51,6 @@ import com.example.prodteamfinal.domain.state.LoadingState
 import com.example.prodteamfinal.navigation.currentForm
 import com.example.prodteamfinal.navigation.currentScreen
 import com.example.prodteamfinal.presentation.theme.blackButtonColors
-import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
